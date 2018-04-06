@@ -26,35 +26,35 @@
 #define RF24_CE_PIN 9
 #define RF24_CS_PIN 10
 
-//таймер
+//timer
 RBD::Timer timer;
 
-//инициализация на радио-модула
+//init radio
 RF24 radio(RF24_CE_PIN, RF24_CS_PIN);
 RF24SN rf24sn( &radio, RF24SN_SERVER_ADDR, RF24SN_NODE_ID);
 
-//инициализация на сензорите
+//init sensors
 Adafruit_BMP085 bmp;
 
-//Интрервал през който праща данните
+//publish interval 
 long  pub_interval = DEF_INTERVAL ; //seconds
 
 long publishTimer, requestTimer; 
 
 void setup() {   
-  //инициализация на ком порт
+  //com port init
   Serial.begin(9600); 
   
-  //инициализация на сензор
+  //init sensors
   if (!bmp.begin()) {
     Serial.println("Could not find a valid BMP085 sensor, check wiring!");
   while (1) {}
   }
   
-  //инициализация на радиото
+  //init radio
   rf24sn.begin(); 
   pub_interval = DEF_INTERVAL; 
-  //прояитаме настройките от ЕПРОМА
+  //read settings
   int value = EEPROM.read(EPROM_WAITINTADDRESS);
   if(value >= DEF_INTERVAL ){
       pub_interval = value; 
@@ -63,7 +63,7 @@ void setup() {
     }
  
   //инит на таймера
-  timer.setTimeout(pub_interval * 1000); //преобразувам в милисекунди
+  timer.setTimeout(pub_interval * 1000); //convert to mils
   timer.restart();
 }
 
